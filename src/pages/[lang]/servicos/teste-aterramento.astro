@@ -1,0 +1,59 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return [
+    {params: {lang: 'pt'}},
+    {params: {lang: 'en'}},
+    {params: {lang: 'it'}},
+    {params: {lang: 'es'}},
+    {params: {lang: 'de'}},
+  ];
+}
+
+const { lang } = Astro.params;
+---
+
+<Layout title="Continuidade e Aterramento NR-10 | SSI Engenharia" lang={lang}>
+    <Header />
+    <main class="pt-24 pb-16">
+         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+             <div class="mb-8">
+                <a href={`/${lang}/`} class="inline-flex items-center text-sm font-semibold text-[#004A99] hover:underline">
+                    &larr; Voltar para Home
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                 <div>
+                     <h1 class="text-4xl font-bold text-slate-900 mb-6 font-display">Continuidade e Aterramento NR-10</h1>
+                      <div class="prose prose-slate text-slate-600">
+                        <p class="mb-4">
+                            A integridade do sistema de aterramento e dos condutores de proteção é vital para evitar choques elétricos. Realizamos testes conforme a NBR 5410.
+                        </p>
+                         <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Nossos Testes</h3>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>Medição de resistência de aterramento.</li>
+                            <li>Verificação de continuidade dos condutores de proteção (PE).</li>
+                            <li>Inspeção visual detalhada de painéis e infraestrutura.</li>
+                        </ul>
+                     </div>
+                 </div>
+                 <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-sm flex items-center justify-center">
+                     <div class="text-center p-12">
+                         <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Segurança Elétrica</h3>
+                        <p class="text-slate-500">Conformidade total com a NR-10 para proteção de pessoas e patrimônio.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <Footer />
+</Layout>

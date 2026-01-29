@@ -2,7 +2,7 @@
 import Layout from '../../../layouts/Layout.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
-import RiskAnimation from '../../../components/RiskAnimation.jsx';
+import ZeusWindow from '../../../components/ZeusWindow.astro';
 
 export const prerender = true;
 
@@ -50,15 +50,7 @@ const { lang } = Astro.params;
 
                 <!-- Technical Window (Animation) -->
                 <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-sm">
-                    <div class="mb-6">
-                        <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Janela Tecnológica</h2>
-                        <h3 class="text-xl font-bold text-slate-800">Classificação Dinâmica</h3>
-                        <p class="text-sm text-slate-500">
-                            Visualização conceitual do processo de decisão entre severidade e frequência (ISO 12100).
-                        </p>
-                    </div>
-                    
-                    <RiskAnimation client:visible />
+                    <ZeusWindow />
                 </div>
             </div>
         </div>

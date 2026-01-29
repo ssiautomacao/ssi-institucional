@@ -6,6 +6,7 @@ import Norms from '../../components/Norms.astro';
 import Solutions from '../../components/Solutions.astro';
 import About from '../../components/About.astro';
 import Footer from '../../components/Footer.astro';
+import ZeusWindow from '../../components/ZeusWindow.astro';
 
 export function getStaticPaths() {
   return [
@@ -24,6 +25,17 @@ const { lang } = Astro.params;
 	<Header />
 	<main>
 		<Hero />
+        
+        <section class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-8">
+                <h2 class="text-[#004A99] font-bold tracking-wide uppercase text-sm mb-3">Tecnologia</h2>
+                <h3 class="text-3xl font-bold text-slate-800 tracking-tight leading-tight font-display">
+                    Nossa Metodologia Visual
+                </h3>
+            </div>
+            <ZeusWindow />
+        </section>
+
         <Norms />
         <About />
         <Solutions />

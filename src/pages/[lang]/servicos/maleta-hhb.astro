@@ -1,0 +1,59 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return [
+    {params: {lang: 'pt'}},
+    {params: {lang: 'en'}},
+    {params: {lang: 'it'}},
+    {params: {lang: 'es'}},
+    {params: {lang: 'de'}},
+  ];
+}
+
+const { lang } = Astro.params;
+---
+
+<Layout title="Instrumentação DT2 | SSI Engenharia" lang={lang}>
+    <Header />
+    <main class="pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+             <div class="mb-8">
+                <a href={`/${lang}/`} class="inline-flex items-center text-sm font-semibold text-[#004A99] hover:underline">
+                    &larr; Voltar para Home
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                     <h1 class="text-4xl font-bold text-slate-900 mb-6 font-display">Instrumentação DT2</h1>
+                     <div class="prose prose-slate text-slate-600">
+                        <p class="mb-4">
+                            Utilizamos instrumentação avançada (Maleta HHB) para medir com precisão milimétrica o tempo de parada total dos equipamentos. 
+                        </p>
+                         <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Aplicações</h3>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>Cálculo de Distância de Segurança (ISO 13855).</li>
+                            <li>Posicionamento de Cortinas de Luz e Scanners.</li>
+                            <li>Validação de Freios e Sistemas de Parada de Emergência.</li>
+                        </ul>
+                     </div>
+                </div>
+                 <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-sm flex items-center justify-center">
+                    <div class="text-center p-12">
+                         <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-10 h-10 text-[#004A99]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800 mb-2">Precisão de Milissegundos</h3>
+                        <p class="text-slate-500">Garantia técnica de que o operador está seguro antes que o perigo seja acessível.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <Footer />
+</Layout>

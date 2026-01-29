@@ -6,7 +6,9 @@ import logoSSI from '../assets/logo.png';
 const lang = Astro.currentLocale || 'pt';
 
 // Navigation Logic
+// Navigation Logic
 const isHome = Astro.url.pathname === `/${lang}` || Astro.url.pathname === `/${lang}/`;
+// Always include lang prefix for anchors if not home, otherwise just hash
 const getLink = (hash: string) => isHome ? hash : `/${lang}/${hash}`;
 
 const languages = [

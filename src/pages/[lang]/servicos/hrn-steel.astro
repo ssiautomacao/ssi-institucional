@@ -1,0 +1,70 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import ZeusWindow from '../../../components/ZeusWindow.astro';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return [
+    {params: {lang: 'pt'}},
+    {params: {lang: 'en'}},
+    {params: {lang: 'it'}},
+    {params: {lang: 'es'}},
+    {params: {lang: 'de'}},
+  ];
+}
+
+const { lang } = Astro.params;
+---
+
+<Layout title="Classificação de Risco (HRN) | SSI Engenharia" lang={lang}>
+    <Header />
+    <main class="pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Breadcrumbs / Back -->
+            <div class="mb-8">
+                <a href={`/${lang}/`} class="inline-flex items-center text-sm font-semibold text-[#004A99] hover:underline">
+                    &larr; Voltar para Home
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <!-- Content -->
+                <div>
+                    <h1 class="text-4xl font-bold text-slate-900 mb-6 font-display">Classificação de Risco (HRN)</h1>
+                    <div class="prose prose-slate text-slate-600">
+                        <p class="mb-4">
+                            O método HRN (Hazard Rating Number) permite quantificar o risco de forma estruturada, facilitando a priorização de investimentos em adequação de segurança.
+                        </p>
+                        <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Parâmetros Analisados</h3>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li><strong>Probabilidade (PE):</strong> Chance de ocorrência do evento perigoso.</li>
+                            <li><strong>Frequência (FE):</strong> Exposição ao perigo no tempo.</li>
+                            <li><strong>Severidade (DPH):</strong> Potencial de dano (ferimento leve a morte).</li>
+                            <li><strong>Número de Pessoas (NP):</strong> Quantidade de envolvidos.</li>
+                        </ul>
+                         <p class="mt-4">
+                            O resultado classifica o risco desde "Aceitável" até "Extremo", guiando as ações corretivas.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Technical Window (Animation) -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-sm">
+                    <div class="mb-6">
+                        <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Janela Tecnológica</h2>
+                        <h3 class="text-xl font-bold text-slate-800">Simulador de Risco</h3>
+                        <p class="text-sm text-slate-500">
+                            Visualize como a combinação de fatores altera a classificação final do risco.
+                        </p>
+                    </div>
+                    
+                    <ZeusWindow />
+                </div>
+            </div>
+        </div>
+    </main>
+    <Footer />
+</Layout>
