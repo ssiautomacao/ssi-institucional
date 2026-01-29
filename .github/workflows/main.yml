@@ -2,9 +2,7 @@ name: Deploy SSI Beta
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
-      - master
+    branches: [main, master]
 
 permissions:
   contents: read
@@ -12,28 +10,37 @@ permissions:
   id-token: write
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
 
       - name: Instalar Dependências e Gerar Build
         run: |
-          npm install
+          npm ci
           npm run build
 
-      - name: Upload Artifact
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Artifact (dist)
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
   deploy:
+    runs-on: ubuntu-latest
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build-and-deploy
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
