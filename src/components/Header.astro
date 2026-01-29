@@ -4,12 +4,12 @@ import { Image } from 'astro:assets';
 import logoSSI from '../assets/logo.png';
 
 const lang = Astro.currentLocale || 'pt';
+const BASE = import.meta.env.BASE_URL;
 
 // Navigation Logic
-// Navigation Logic
-const isHome = Astro.url.pathname === `/${lang}` || Astro.url.pathname === `/${lang}/`;
+const isHome = Astro.url.pathname === `${BASE}${lang}` || Astro.url.pathname === `${BASE}${lang}/`;
 // Always include lang prefix for anchors if not home, otherwise just hash
-const getLink = (hash: string) => isHome ? hash : `/${lang}/${hash}`;
+const getLink = (hash: string) => isHome ? hash : `${BASE}${lang}/${hash}`;
 
 const languages = [
     { code: 'pt', label: 'PT' },
@@ -23,17 +23,20 @@ const languages = [
 // Replaces the first path segment (locale) with the new one
 const currentPath = Astro.url.pathname;
 const switchLang = (newLang: string) => {
-    // If root (e.g. /pt), parts might be ['', 'pt']
-    const parts = currentPath.split('/').filter(Boolean);
+    // currentPath is like /ssi-institucional/pt/something
+    // Remove BASE from start to get relative path
+    const relativePath = currentPath.startsWith(BASE) ? currentPath.slice(BASE.length) : currentPath;
+    
+    const parts = relativePath.split('/').filter(Boolean);
     
     // Check if first part is a known locale
     if (parts.length > 0 && languages.some(l => l.code === parts[0])) {
         parts[0] = newLang; // swap locale
-        return `/${parts.join('/')}`;
+        return `${BASE}${parts.join('/')}`;
     }
     
-    // If we're at root '/' or somewhere without prefix, add it (shouldn't happen with prefixDefaultLocale: true)
-    return `/${newLang}${currentPath === '/' ? '' : currentPath}`;
+    // If we're at root relative to BASE, or fallback
+    return `${BASE}${newLang}${relativePath ? '/' + relativePath : ''}`;
 };
 ---
 
@@ -42,7 +45,7 @@ const switchLang = (newLang: string) => {
     <div class="flex justify-between items-center h-20">
       <!-- Logo -->
       <div class="flex-shrink-0 flex items-center">
-        <a href={`/${lang}/`} class="flex items-center gap-2">
+        <a href={`${BASE}${lang}/`} class="flex items-center gap-2">
           <Image src={logoSSI} alt="SSI Engenharia" class="h-12 w-auto" quality={90} format="webp" />
         </a>
       </div>

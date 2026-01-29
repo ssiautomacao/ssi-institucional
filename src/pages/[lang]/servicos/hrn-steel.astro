@@ -17,6 +17,7 @@ export function getStaticPaths() {
 }
 
 const { lang } = Astro.params;
+const BASE = import.meta.env.BASE_URL;
 ---
 
 <Layout title="Classificação de Risco (HRN) | SSI Engenharia" lang={lang}>
@@ -25,7 +26,7 @@ const { lang } = Astro.params;
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Breadcrumbs / Back -->
             <div class="mb-8">
-                <a href={`/${lang}/`} class="inline-flex items-center text-sm font-semibold text-[#004A99] hover:underline">
+                <a href={`${BASE}${lang}/`} class="inline-flex items-center text-sm font-semibold text-[#004A99] hover:underline">
                     &larr; Voltar para Home
                 </a>
             </div>
@@ -61,7 +62,9 @@ const { lang } = Astro.params;
                         </p>
                     </div>
                     
-                    <ZeusWindow />
+                    <div class="mx-auto max-w-4xl scale-85 origin-top">
+                        <ZeusWindow />
+                    </div>
                 </div>
             </div>
         </div>
