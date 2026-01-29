@@ -1,5 +1,7 @@
 ---
 import { CheckCircle, ArrowRight } from 'lucide-react';
+import { Image } from 'astro:assets';
+import menWarehouse from '../assets/men-warehouse-working-laptop.jpg';
 ---
 
 <section id="solutions" class="py-24 bg-white">
@@ -70,10 +72,13 @@ import { CheckCircle, ArrowRight } from 'lucide-react';
       <!-- Image -->
       <div class="relative fade-in" style="transition-delay: 200ms;">
         <div class="absolute -inset-4 bg-slate-100 rounded-2xl transform rotate-2"></div>
-        <img 
-            src="/ssi-institucional/men-warehouse-working-laptop.jpg" 
+         <Image 
+            src={menWarehouse} 
             alt="Engenheiros analisando dados da fábrica" 
             class="relative rounded-lg shadow-2xl w-full h-[600px] object-cover"
+            width={600}
+            quality={80}
+            format="webp"
         />
         <!-- Stat Card -->
         <div class="absolute bottom-8 left-8 bg-white p-6 rounded-lg shadow-xl border-l-4 border-[#004A99] max-w-xs">

@@ -9,6 +9,14 @@ import react from '@astrojs/react';
 export default defineConfig({
   site: 'https://ssiautomacao.github.io',
   base: '/ssi-institucional/',
+  i18n: {
+    defaultLocale: "pt",
+    locales: ["pt", "en", "it", "es", "de"],
+    routing: {
+      prefixDefaultLocale: true,
+      redirectToDefaultLocale: true
+    }
+  },
   vite: {
     plugins: [tailwindcss()]
   },

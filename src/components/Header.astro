@@ -1,6 +1,38 @@
 ---
 import { Menu, X } from 'lucide-react';
+import { Image } from 'astro:assets';
+import logoSSI from '../assets/logo.png';
 
+const lang = Astro.currentLocale || 'pt';
+
+// Navigation Logic
+const isHome = Astro.url.pathname === `/${lang}` || Astro.url.pathname === `/${lang}/`;
+const getLink = (hash: string) => isHome ? hash : `/${lang}/${hash}`;
+
+const languages = [
+    { code: 'pt', label: 'PT' },
+    { code: 'en', label: 'EN' },
+    { code: 'it', label: 'IT' },
+    { code: 'es', label: 'ES' },
+    { code: 'de', label: 'DE' }
+];
+
+// Switch Lang Helper
+// Replaces the first path segment (locale) with the new one
+const currentPath = Astro.url.pathname;
+const switchLang = (newLang: string) => {
+    // If root (e.g. /pt), parts might be ['', 'pt']
+    const parts = currentPath.split('/').filter(Boolean);
+    
+    // Check if first part is a known locale
+    if (parts.length > 0 && languages.some(l => l.code === parts[0])) {
+        parts[0] = newLang; // swap locale
+        return `/${parts.join('/')}`;
+    }
+    
+    // If we're at root '/' or somewhere without prefix, add it (shouldn't happen with prefixDefaultLocale: true)
+    return `/${newLang}${currentPath === '/' ? '' : currentPath}`;
+};
 ---
 
 <header id="main-header" class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200 transition-all duration-300">
@@ -8,24 +40,43 @@ import { Menu, X } from 'lucide-react';
     <div class="flex justify-between items-center h-20">
       <!-- Logo -->
       <div class="flex-shrink-0 flex items-center">
-        <a href="#" class="flex items-center gap-2">
-          <img src="/ssi-institucional/assets/logo.png" alt="SSI Engenharia" class="h-12 w-auto" />
+        <a href={`/${lang}/`} class="flex items-center gap-2">
+          <Image src={logoSSI} alt="SSI Engenharia" class="h-12 w-auto" quality={90} format="webp" />
         </a>
       </div>
 
       <!-- Desktop Menu -->
       <nav class="hidden md:flex items-center space-x-8">
-        <a href="#home" class="text-sm font-semibold text-slate-600 hover:text-[#004A99] transition tracking-wide uppercase">Home</a>
-        <a href="#solutions" class="text-sm font-semibold text-slate-600 hover:text-[#004A99] transition tracking-wide uppercase">Serviços</a>
-        <a href="#about" class="text-sm font-semibold text-slate-600 hover:text-[#004A99] transition tracking-wide uppercase">Sobre Nós</a>
+        <a href={getLink('#home')} class="text-sm font-semibold text-slate-600 hover:text-[#004A99] transition tracking-wide uppercase">Home</a>
+        <a href={getLink('#solutions')} class="text-sm font-semibold text-slate-600 hover:text-[#004A99] transition tracking-wide uppercase">Serviços</a>
+        <a href={getLink('#about')} class="text-sm font-semibold text-slate-600 hover:text-[#004A99] transition tracking-wide uppercase">Sobre Nós</a>
         
-        <a href="#contact" class="px-6 py-2.5 bg-[#004A99] hover:bg-blue-800 text-white rounded shadow transition-all font-bold text-sm uppercase tracking-wide">
+        <!-- Language Selector -->
+        <div class="relative group">
+            <button class="flex items-center space-x-1 text-sm font-semibold text-slate-600 hover:text-[#004A99] uppercase">
+                <span>{lang}</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div class="absolute right-0 mt-2 w-24 bg-white rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ring-1 ring-black ring-opacity-5">
+                {languages.map((l) => (
+                    <a 
+                        href={switchLang(l.code)} 
+                        class={`block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-[#004A99] ${lang === l.code ? 'font-bold bg-slate-50' : ''}`}
+                    >
+                        {l.label}
+                    </a>
+                ))}
+            </div>
+        </div>
+
+        <a href={getLink('#contact')} class="px-6 py-2.5 bg-[#004A99] hover:bg-blue-800 text-white rounded shadow transition-all font-bold text-sm uppercase tracking-wide">
             Falar com Especialista
         </a>
       </nav>
 
       <!-- Mobile Menu Button -->
-      <div class="md:hidden flex items-center">
+      <div class="md:hidden flex items-center gap-4">
+        <span class="text-sm font-bold text-slate-500 uppercase">{lang}</span>
         <button id="mobile-menu-btn" class="p-2 rounded-md text-slate-600 hover:bg-slate-100 transition">
             <Menu className="w-6 h-6" />
         </button>
@@ -36,10 +87,19 @@ import { Menu, X } from 'lucide-react';
   <!-- Mobile Menu Panel -->
   <div id="mobile-menu" class="hidden md:hidden bg-white w-full border-t border-slate-100 absolute top-20 left-0 shadow-lg">
     <div class="px-6 py-8 space-y-4 text-center">
-      <a href="#home" class="block py-2 text-lg font-medium text-slate-800 hover:text-[#004A99]">Home</a>
-      <a href="#solutions" class="block py-2 text-lg font-medium text-slate-800 hover:text-[#004A99]">Serviços</a>
-      <a href="#about" class="block py-2 text-lg font-medium text-slate-800 hover:text-[#004A99]">Sobre Nós</a>
-      <a href="#contact" class="inline-block px-8 py-3 bg-[#004A99] text-white rounded font-bold mt-4 w-full">Falar com Especialista</a>
+      <a href={getLink('#home')} class="block py-2 text-lg font-medium text-slate-800 hover:text-[#004A99]">Home</a>
+      <a href={getLink('#solutions')} class="block py-2 text-lg font-medium text-slate-800 hover:text-[#004A99]">Serviços</a>
+      <a href={getLink('#about')} class="block py-2 text-lg font-medium text-slate-800 hover:text-[#004A99]">Sobre Nós</a>
+      
+      <div class="flex justify-center gap-4 py-4 border-t border-slate-100 mt-2">
+          {languages.map((l) => (
+             <a href={switchLang(l.code)} class={`text-sm font-bold ${lang === l.code ? 'text-[#004A99]' : 'text-slate-500'}`}>
+                 {l.code.toUpperCase()}
+             </a>
+          ))}
+      </div>
+
+      <a href={getLink('#contact')} class="inline-block px-8 py-3 bg-[#004A99] text-white rounded font-bold mt-4 w-full">Falar com Especialista</a>
     </div>
   </div>
 </header>
@@ -47,13 +107,10 @@ import { Menu, X } from 'lucide-react';
 <script>
   const header = document.getElementById('main-header');
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-  const closeMenuBtn = document.getElementById('close-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
-  const menuLinks = mobileMenu?.querySelectorAll('a'); // Close menu on link click
+  const menuLinks = mobileMenu?.querySelectorAll('a'); 
 
-  // Scroll visibility logic
   window.addEventListener('scroll', () => {
-    // Only apply background if NOT mobile menu open (simplified for now)
     if (window.scrollY > 50) {
       header?.classList.remove('bg-transparent', 'py-4');
     } else {
@@ -61,16 +118,18 @@ import { Menu, X } from 'lucide-react';
     }
   });
 
-  // Mobile menu toggle
   const toggleMenu = () => {
       mobileMenu?.classList.toggle('hidden');
-      document.body.classList.toggle('overflow-hidden'); // Prevent scrolling
+      document.body.classList.toggle('overflow-hidden'); 
   };
 
-  mobileMenuBtn?.addEventListener('click', toggleMenu);
-  closeMenuBtn?.addEventListener('click', toggleMenu);
+  if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', toggleMenu);
+  }
   
-  menuLinks?.forEach(link => {
-      link.addEventListener('click', toggleMenu);
-  });
+  if (menuLinks) {
+     menuLinks.forEach(link => {
+        link.addEventListener('click', toggleMenu);
+     });
+  }
 </script>

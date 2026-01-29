@@ -1,13 +1,18 @@
 ---
----
-
----
+import { Image } from 'astro:assets';
+import factoryWorkers from '../assets/factory-workers.jpg';
 ---
 
 <section class="py-16 bg-slate-50 relative overflow-hidden">
     <!-- Background integrated with overlay for institutional look -->
     <div class="absolute inset-0 z-0 opacity-10">
-        <img src="/ssi-institucional/factory-workers.jpg" alt="Equipe na fábrica" class="w-full h-full object-cover grayscale" />
+        <Image 
+            src={factoryWorkers} 
+            alt="Equipe na fábrica" 
+            class="w-full h-full object-cover grayscale"
+            quality={80}
+            format="webp" 
+        />
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">

@@ -1,16 +1,30 @@
 ---
 import { Phone, Mail, MapPin } from 'lucide-react';
+import { Image } from 'astro:assets';
+import logoCrea from '../assets/logo-crea-confea.png';
+import logoCmse from '../assets/logo-cmse-tuvnord.png';
+
+const currentDate = new Date();
+const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+const currentMonth = monthNames[currentDate.getMonth()];
+const currentYear = currentDate.getFullYear();
 ---
 
 <footer id="contact" class="bg-slate-50 text-slate-600 py-16 border-t border-slate-200">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-      <!-- Brand -->
+      <!-- Brand & Certifications -->
       <div>
         <h3 class="text-2xl font-bold text-[#004A99] mb-6 font-display">SSI Engenharia</h3>
-        <p class="text-slate-500 leading-relaxed max-w-sm">
+        <p class="text-slate-500 leading-relaxed max-w-sm mb-8">
           Excelência em engenharia consultiva, garantindo conformidade e segurança para a indústria nacional.
         </p>
+        
+        <!-- Logos -->
+        <div class="flex items-center gap-6 opacity-90">
+            <Image src={logoCrea} alt="Selo CREA/CONFEA" class="h-10 w-auto" quality={90} format="webp" />
+            <Image src={logoCmse} alt="CMSE TÜV NORD" class="h-12 w-auto" quality={90} format="webp" />
+        </div>
       </div>
 
       <!-- Contact -->
@@ -19,15 +33,15 @@ import { Phone, Mail, MapPin } from 'lucide-react';
         <ul class="space-y-4">
           <li class="flex items-start">
             <Phone className="w-5 h-5 text-[#004A99] mr-3 mt-1" />
-            <span>(11) 99999-9999</span>
+            <span>+55 11 4327-6827</span>
           </li>
           <li class="flex items-start">
             <Mail className="w-5 h-5 text-[#004A99] mr-3 mt-1" />
-            <span>contato@ssiengenharia.com.br</span>
+            <span>contato@ssi-ind.com</span>
           </li>
           <li class="flex items-start">
             <MapPin className="w-5 h-5 text-[#004A99] mr-3 mt-1" />
-            <span>São Paulo - SP</span>
+            <span>Avenida Fagundes Filho, Nº77, CJ65, São Paulo, SP, BR</span>
           </li>
         </ul>
       </div>
@@ -43,8 +57,13 @@ import { Phone, Mail, MapPin } from 'lucide-react';
       </div>
     </div>
 
+    <!-- Bottom Bar -->
     <div class="mt-16 pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500">
-      <p>&copy; {new Date().getFullYear()} SSI Engenharia. Todos os direitos reservados.</p>
+      <div class="flex flex-col md:flex-row items-center gap-4">
+          <p>&copy; {currentYear} SSI Engenharia. Todos os direitos reservados.</p>
+          <span class="hidden md:inline text-slate-300">|</span>
+          <p class="text-slate-400">Atualizado em: {currentMonth} {currentYear}</p>
+      </div>
       <div class="flex items-center space-x-2 mt-4 md:mt-0">
         <span class="font-semibold text-slate-400">Engenharia Consultiva</span>
       </div>
@@ -53,7 +72,7 @@ import { Phone, Mail, MapPin } from 'lucide-react';
 
   <!-- WhatsApp Floating Pill -->
   <a 
-    href="https://wa.me/5511999999999" 
+    href="https://wa.me/5511944546380" 
     target="_blank" 
     rel="noopener noreferrer"
     class="fixed bottom-6 right-6 z-50 bg-[#25D366] hover:bg-[#20bd5a] text-white px-6 py-3 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 flex items-center gap-3 group"
@@ -62,7 +81,7 @@ import { Phone, Mail, MapPin } from 'lucide-react';
          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
     </div>
     <div class="flex flex-col text-left">
-        <span class="text-[10px] uppercase font-bold tracking-wider opacity-90">Atendimento</span>
+        <span class="text-[10px] uppercase font-bold tracking-wider opacity-90">Suporte de Engenharia</span>
         <span class="text-sm font-bold leading-none">Solicitar Orçamento</span>
     </div>
   </a>

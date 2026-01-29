@@ -1,20 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import Hero from '../components/Hero.astro';
-import Norms from '../components/Norms.astro';
-import Solutions from '../components/Solutions.astro';
-import About from '../components/About.astro';
-import Footer from '../components/Footer.astro';
+// Redirect root to default locale
+export const prerender = false;
+return Astro.redirect('/pt/');
 ---
-
-<Layout title="SSI Engenharia - Consultoria em Segurança Industrial">
-	<Header />
-	<main>
-		<Hero />
-        <Norms />
-        <About />
-        <Solutions />
-	</main>
-	<Footer />
-</Layout>

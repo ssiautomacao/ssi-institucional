@@ -1,0 +1,59 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { Image } from 'astro:assets';
+// Placeholder asset use if specific generic image is needed, else text only for now.
+
+export function getStaticPaths() {
+  return [
+    {params: {lang: 'pt'}},
+    {params: {lang: 'en'}},
+    {params: {lang: 'it'}},
+    {params: {lang: 'es'}},
+    {params: {lang: 'de'}},
+  ];
+}
+
+const { lang } = Astro.params;
+---
+
+<Layout title="Medição de Tempo de Parada | SSI Engenharia" lang={lang}>
+    <Header />
+    <main class="pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+             <div class="mb-8">
+                <a href={`/${lang}/`} class="inline-flex items-center text-sm font-semibold text-[#004A99] hover:underline">
+                    &larr; Voltar para Home
+                </a>
+            </div>
+
+            <div class="max-w-3xl">
+                <h1 class="text-4xl font-bold text-slate-900 mb-6 font-display">Medição de Tempo de Parada</h1>
+                <h2 class="text-xl text-[#004A99] font-semibold mb-8">Conformidade com ISO 13855</h2>
+                
+                <div class="prose prose-lg prose-slate text-slate-600">
+                    <p class="mb-6">
+                        A verificação correta das distâncias de segurança é crítica para a eficácia de dispositivos optoeletrônicos (cortinas de luz) e comandos bimanuais. Utilizamos instrumentação de ponta certificada para garantir precisão milimétrica.
+                    </p>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-600 p-6 my-8">
+                        <p class="font-bold text-blue-900 mb-2">Por que medir?</p>
+                        <p class="text-blue-800 text-base">
+                            Cortinas de luz instaladas incorretamente criam uma falsa sensação de segurança. O cálculo da distância segura depende diretamente do tempo total de parada do sistema.
+                        </p>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Metodologia</h3>
+                    <ul class="list-disc pl-5 space-y-3">
+                        <li>Instrumentação calibrada e rastreável (RBC).</li>
+                        <li>Múltiplas medições para cálculo estatístico de incerteza.</li>
+                        <li>Laudo técnico detalhado com gráficos de frenagem.</li>
+                        <li>Cálculo da distância mínima conforme ISO 13855.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+    <Footer />
+</Layout>

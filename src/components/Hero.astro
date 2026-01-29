@@ -1,19 +1,20 @@
 ---
-
----
----
-
----
+import { Image } from 'astro:assets';
+import fieldInspection from '../assets/inspecao-campo.jpg';
 ---
 
 <section id="home" class="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
   <!-- Background Image with Overlay -->
   <div class="absolute inset-0 z-0">
-    <img 
-      src="/ssi-institucional/inspecao-campo.jpg" 
+    <Image 
+      src={fieldInspection} 
       alt="Engenheiros em inspeção de campo industrial" 
       class="w-full h-full object-cover"
+      quality={80}
+      widths={[640, 1024, 1920]}
+      sizes="100vw"
       loading="eager"
+      format="webp"
     />
     <!-- Professional Gradient Overlay -->
     <div class="absolute inset-0 bg-gradient-to-r from-[#001529]/90 via-[#001529]/80 to-transparent"></div>

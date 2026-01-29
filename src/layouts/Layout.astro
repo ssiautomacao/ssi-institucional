@@ -1,25 +1,32 @@
 ---
+import HeadSEO from '../components/HeadSEO.astro';
 import { ViewTransitions } from 'astro:transitions';
 import '../styles/global.css';
 
 interface Props {
 	title: string;
+    lang?: string;
 }
 
-const { title } = Astro.props;
+const { title, lang = 'pt' } = Astro.props;
+const currentSlug = Astro.url.pathname;
 ---
 
 <!doctype html>
-<html lang="pt-BR" class="scroll-smooth">
+<html lang={lang} class="scroll-smooth">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content="SSI Engenharia - Consultoria Especializada em NR-12 e Segurança do Trabalho" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
+        
+        <!-- SEO System -->
+        <HeadSEO activeLang={lang} currentSlug={currentSlug} />
+
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 		<title>{title} | SSI Engenharia</title>
         <ViewTransitions />
 	</head>

@@ -1,0 +1,65 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import RiskAnimation from '../../../components/RiskAnimation.jsx';
+
+export function getStaticPaths() {
+  return [
+    {params: {lang: 'pt'}},
+    {params: {lang: 'en'}},
+    {params: {lang: 'it'}},
+    {params: {lang: 'es'}},
+    {params: {lang: 'de'}},
+  ];
+}
+
+const { lang } = Astro.params;
+---
+
+<Layout title="Apreciação de Risco | SSI Engenharia" lang={lang}>
+    <Header />
+    <main class="pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Breadcrumbs / Back -->
+            <div class="mb-8">
+                <a href={`/${lang}/`} class="inline-flex items-center text-sm font-semibold text-[#004A99] hover:underline">
+                    &larr; Voltar para Home
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <!-- Content -->
+                <div>
+                    <h1 class="text-4xl font-bold text-slate-900 mb-6 font-display">Apreciação de Risco</h1>
+                    <div class="prose prose-slate text-slate-600">
+                        <p class="mb-4">
+                            A Apreciação de Risco é o pilar fundamental para a adequação à NR-12. Nossa metodologia exclusiva identifica, analisa e avalia os riscos associados às máquinas equipamentos, garantindo um ambiente de trabalho seguro e em conformidade legal.
+                        </p>
+                        <h3 class="text-xl font-bold text-slate-800 mt-6 mb-3">Nossa Abordagem</h3>
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>Análise detalhada dos limites da máquina.</li>
+                            <li>Identificação de perigos em todas as fases de vida.</li>
+                            <li>Estimativa de risco baseada na NBR ISO 12100.</li>
+                            <li>Documentação técnica rigorosa e rastreável.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Technical Window (Animation) -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100 shadow-sm">
+                    <div class="mb-6">
+                        <h2 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Janela Tecnológica</h2>
+                        <h3 class="text-xl font-bold text-slate-800">Classificação Dinâmica</h3>
+                        <p class="text-sm text-slate-500">
+                            Visualização conceitual do processo de decisão entre severidade e frequência (ISO 12100).
+                        </p>
+                    </div>
+                    
+                    <RiskAnimation client:visible />
+                </div>
+            </div>
+        </div>
+    </main>
+    <Footer />
+</Layout>
