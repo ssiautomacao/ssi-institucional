@@ -1,5 +1,11 @@
----
-// Redirect root to default locale
-export const prerender = false;
-return Astro.redirect('/pt/');
----
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="refresh" content="0;url=/ssi-institucional/pt/" />
+  </head>
+  <body>
+    <script>
+      window.location.href = "/ssi-institucional/pt/";
+    </script>
+  </body>
+</html>
