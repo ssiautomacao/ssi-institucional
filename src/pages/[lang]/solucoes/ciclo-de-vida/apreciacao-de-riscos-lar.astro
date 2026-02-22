@@ -1,0 +1,37 @@
+---
+// src/pages/[lang]/solucoes/ciclo-de-vida/apreciacao-de-riscos-lar.astro
+export const prerender = true;
+import ServicePage from '../../../../components/ServicePage.astro';
+import RiskAnimation from '../../../../components/RiskAnimation.jsx';
+import ZeusHRNLoop from '../../../../components/ZeusHRNLoop.astro';
+import Layout from '../../../../layouts/Layout.astro';
+import { getPagePayload } from '../../../../i18n/payloadLoader';
+
+import { LOCALES } from '../../../../i18n/config';
+
+export function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const currentLang = Astro.currentLocale || 'pt';
+const pagePayload = getPagePayload('apreciacao-risco', currentLang);
+---
+
+<Layout title={pagePayload.hero.headline} lang={currentLang}>
+  <ServicePage page={pagePayload} lang={currentLang} seoTitle={pagePayload.hero.headline}>
+    <!-- Slot 1: RiskAnimation Island — two-column in PainPoint (diagnóstico) -->
+    <div slot="risk-animation" class="bg-white p-2 rounded-2xl border border-slate-200 shadow-inner min-h-[280px] flex items-stretch">
+      <RiskAnimation client:visible />
+      <noscript>
+        <p class="text-sm text-slate-500 text-center p-4">
+          Visualização interativa disponível com JavaScript habilitado.
+        </p>
+      </noscript>
+    </div>
+
+    <!-- Slot 2: ZeusHRNLoop — full software interface below Methodology -->
+    <div slot="zeus-hrn-loop" class="pt-4">
+      <ZeusHRNLoop />
+    </div>
+  </ServicePage>
+</Layout>

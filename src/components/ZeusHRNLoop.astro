@@ -1,0 +1,108 @@
+---
+// src/components/ZeusHRNLoop.astro
+// Full-interface HRN slideshow — NO CROP.
+// Uses object-contain (not cover) so all UI borders are visible.
+// Transitions: 700ms opacity crossfade every 3s via script.
+// Sprint 07: Created for /apreciacao-de-riscos-lar Methodology section.
+
+import { Image } from 'astro:assets';
+import zeus1 from '../assets/tech/zeus-1.png';
+import zeus2 from '../assets/tech/zeus-2.png';
+import zeus3 from '../assets/tech/zeus-3.png';
+
+const slides = [
+  { img: zeus1, alt: 'ZEUS HRN — Tela de Mapeamento de Perigos' },
+  { img: zeus2, alt: 'ZEUS HRN — Estimativa de Risco e HRN Calculator' },
+  { img: zeus3, alt: 'ZEUS HRN — Relatório de Medidas de Segurança' },
+];
+---
+
+<figure class="w-full max-w-3xl mx-auto" aria-label="Demonstração do sistema ZEUS Analytics — HRN">
+  <figcaption class="sr-only">Sequência de telas do sistema ZEUS de análise de risco HRN, conforme ISO 12100.</figcaption>
+
+  <!-- Container: fixed 16/9 ratio, object-contain, neutral bg — ZERO CROP -->
+  <div
+    id="zeus-hrn-container"
+    class="relative w-full aspect-video bg-slate-50 rounded-2xl border border-slate-200 shadow-md overflow-hidden"
+  >
+    {slides.map(({ img, alt }, i) => (
+      <div
+        class={`zeus-hrn-slide absolute inset-0 transition-opacity duration-700 ease-in-out ${i === 0 ? 'opacity-100' : 'opacity-0'}`}
+        data-index={i}
+      >
+        <Image
+          src={img}
+          alt={alt}
+          class="w-full h-full object-contain"
+          quality={90}
+          format="webp"
+          loading={i === 0 ? 'eager' : 'lazy'}
+        />
+      </div>
+    ))}
+
+    <!-- Dot navigation -->
+    <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+      {slides.map((_, i) => (
+        <button
+          class="zeus-hrn-dot w-2 h-2 rounded-full bg-slate-400 transition-all duration-300"
+          data-target={i}
+          aria-label={`Tela ${i + 1}`}
+        />
+      ))}
+    </div>
+  </div>
+
+  <!-- Caption -->
+  <div class="mt-3 text-center">
+    <p class="text-sm text-slate-500 font-medium">
+      Sistema ZEUS Analytics — Análise de Risco HRN conforme ISO 12100
+    </p>
+  </div>
+</figure>
+
+<script>
+(function () {
+  const container = document.getElementById('zeus-hrn-container');
+  if (!container) return;
+
+  const slides = container.querySelectorAll<HTMLElement>('.zeus-hrn-slide');
+  const dots   = container.querySelectorAll<HTMLButtonElement>('.zeus-hrn-dot');
+  let current  = 0;
+  let timer: ReturnType<typeof setInterval>;
+
+  const goTo = (next: number) => {
+    slides[current].classList.remove('opacity-100');
+    slides[current].classList.add('opacity-0');
+    dots[current].classList.remove('bg-slate-700', 'scale-125');
+    dots[current].classList.add('bg-slate-400');
+
+    current = next;
+
+    slides[current].classList.remove('opacity-0');
+    slides[current].classList.add('opacity-100');
+    dots[current].classList.remove('bg-slate-400');
+    dots[current].classList.add('bg-slate-700', 'scale-125');
+  };
+
+  const start = () => {
+    goTo(0); // activate first dot
+    timer = setInterval(() => {
+      goTo((current + 1) % slides.length);
+    }, 3500);
+  };
+
+  // Dot click — manual nav
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      clearInterval(timer);
+      goTo(i);
+      timer = setInterval(() => goTo((current + 1) % slides.length), 3500);
+    });
+  });
+
+  // Astro view transitions compat
+  document.addEventListener('astro:page-load', start);
+  start();
+})();
+</script>

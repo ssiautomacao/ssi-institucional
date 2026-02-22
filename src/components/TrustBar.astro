@@ -1,0 +1,29 @@
+---
+// src/components/TrustBar.astro
+// Horizontal trust/authority bar — certifications, associations, standards.
+// Purely presentational, zero props required. Positioned at bottom of institutional pages.
+
+const certifications = [
+  { label: "CMSE® TÜV Nord", sub: "Certificação Internacional" },
+  { label: "CREA / CONFEA", sub: "Habilitação Federal" },
+  { label: "ISO 12100", sub: "Apreciação de Risco" },
+  { label: "ISO 13849", sub: "Arquitetura de Segurança" },
+  { label: "ABIMAQ", sub: "Associado Oficial" },
+];
+---
+
+<section class="py-12 bg-slate-50 border-t border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <p class="text-center text-xs font-bold tracking-widest uppercase text-slate-400 mb-8">
+      Credenciais e Certificações
+    </p>
+    <div class="flex flex-wrap justify-center items-center gap-8 sm:gap-12">
+      {certifications.map((cert) => (
+        <div class="text-center group">
+          <p class="text-sm font-bold text-slate-700 group-hover:text-blue-700 transition-colors">{cert.label}</p>
+          <p class="text-xs text-slate-400 mt-0.5">{cert.sub}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

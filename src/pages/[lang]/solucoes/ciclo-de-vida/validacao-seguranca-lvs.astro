@@ -1,0 +1,20 @@
+---
+// src/pages/[lang]/solucoes/ciclo-de-vida/validacao-seguranca-lvs.astro
+export const prerender = true;
+import Layout from '../../../../layouts/Layout.astro';
+import ServicePage from '../../../../components/ServicePage.astro';
+import { getPagePayload } from '../../../../i18n/payloadLoader';
+
+import { LOCALES } from '../../../../i18n/config';
+
+export function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const currentLang = Astro.currentLocale || 'pt';
+const pagePayload = getPagePayload('validacao-seguranca', currentLang);
+---
+
+<Layout title={pagePayload.hero.headline} lang={currentLang}>
+  <ServicePage page={pagePayload} lang={currentLang} seoTitle={pagePayload.hero.headline} />
+</Layout>

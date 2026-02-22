@@ -1,0 +1,23 @@
+---
+// src/pages/[lang]/sobre-nos.astro
+export const prerender = true;
+import InstitutionalPage from '../../components/InstitutionalPage.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getPagePayload } from '../../i18n/payloadLoader';
+
+import { LOCALES } from '../../i18n/config';
+
+export function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const currentLang = Astro.currentLocale || 'pt';
+const pagePayload = getPagePayload('sobre-a-empresa', currentLang);
+---
+
+<InstitutionalPage
+  page={pagePayload}
+  lang={currentLang}
+  seoTitle={pagePayload.hero.headline}
+  seoDescription={pagePayload.hero.subtext}
+/>

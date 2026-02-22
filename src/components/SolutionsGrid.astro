@@ -1,0 +1,48 @@
+---
+// src/components/SolutionsGrid.astro
+// Strict-props component — renders pillar cards driven entirely by SolutionsGridProps.
+// No hardcoded content, no calculation logic.
+
+import type { SolutionsGridProps } from '../types/content';
+
+type Props = SolutionsGridProps;
+const { id, pillars } = Astro.props;
+---
+
+<div id={id} class="grid grid-cols-1 md:grid-cols-3 gap-8">
+  {pillars.map((pillar) => (
+    <a
+      href={pillar.link}
+      class="group relative flex flex-col overflow-hidden rounded-xl bg-white shadow-md border border-slate-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+    >
+      <!-- Card Image -->
+      <div class="relative h-52 overflow-hidden bg-slate-100">
+        <img
+          src={pillar.imageSrc}
+          alt={pillar.title}
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          loading="lazy"
+          decoding="async"
+        />
+        <!-- Blue accent bar at bottom of image -->
+        <div class="absolute bottom-0 left-0 right-0 h-1 bg-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      </div>
+
+      <!-- Card Content -->
+      <div class="flex flex-col flex-1 p-6">
+        <h3 class="text-lg font-bold text-slate-800 mb-3 group-hover:text-blue-700 transition-colors leading-snug">
+          {pillar.title}
+        </h3>
+        <p class="text-sm text-slate-500 leading-relaxed flex-1">
+          {pillar.copy}
+        </p>
+        <span class="mt-4 inline-flex items-center gap-1 text-sm font-bold text-blue-700 uppercase tracking-wide">
+          Saiba Mais
+          <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </span>
+      </div>
+    </a>
+  ))}
+</div>

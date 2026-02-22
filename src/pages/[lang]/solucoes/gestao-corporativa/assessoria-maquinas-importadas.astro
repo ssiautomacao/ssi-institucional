@@ -1,0 +1,21 @@
+---
+// src/pages/[lang]/solucoes/gestao-corporativa/assessoria-maquinas-importadas.astro
+export const prerender = true;
+import ServicePage from '../../../../components/ServicePage.astro';
+import { maquinasImportadasPage } from '../../../../data/pages/assessoria-maquinas-importadas.pt';
+
+import { LOCALES } from '../../../../i18n/config';
+
+export function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+---
+
+<ServicePage
+  page={maquinasImportadasPage}
+  lang={lang}
+  seoTitle="Assessoria para Máquinas Importadas — Pré-Embarque e Nacionalização | SSI Automação"
+  seoDescription="Inspeções de pré-embarque, validação de softwares de segurança e adequação documental para máquinas europeias/asiáticas ao padrão NR-12. Suporte trilíngue EN, IT, ES."
+/>

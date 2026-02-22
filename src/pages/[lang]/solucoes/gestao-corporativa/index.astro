@@ -1,0 +1,61 @@
+---
+export const prerender = true;
+import Layout from '../../../../layouts/Layout.astro';
+import Header from '../../../../components/Header.astro';
+import Footer from '../../../../components/Footer.astro';
+import { getPagePayload } from '../../../../i18n/payloadLoader';
+
+import { LOCALES } from '../../../../i18n/config';
+
+export function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const currentLang = Astro.currentLocale || 'pt';
+const { lang } = Astro.params;
+const pagePayload = getPagePayload('hub-gestao-corporativa', currentLang);
+const BASE = import.meta.env.BASE_URL;
+---
+
+<Layout 
+  title={pagePayload.seo.title} 
+  description={pagePayload.seo.description}
+  lang={lang}
+>
+  <Header />
+  <main class="pt-20">
+    <div class="bg-slate-900 py-20 text-center text-white">
+      <div class="max-w-4xl mx-auto px-4">
+        <span class="text-blue-400 font-bold tracking-widest uppercase text-xs">Serviços</span>
+        <h1 class="text-4xl md:text-5xl font-bold mt-4 mb-6">{pagePayload.hero.title}</h1>
+        <p class="text-lg text-slate-300 max-w-2xl mx-auto">{pagePayload.hero.subtitle}</p>
+      </div>
+    </div>
+    <div class="max-w-5xl mx-auto px-4 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <a href={`${BASE}${lang}/solucoes/gestao-corporativa/lockout-tagout-loto`} class="p-8 border border-slate-200 rounded-xl hover:shadow-xl hover:border-blue-200 hover:bg-blue-50/30 transition-all bg-white group">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-4 group-hover:bg-blue-700 transition-colors">
+            <svg class="w-5 h-5 text-blue-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-700">Programa LOTO</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Bloqueio de energias perigosas e procedimentos de energia zero.</p>
+        </a>
+        <a href={`${BASE}${lang}/solucoes/gestao-corporativa/programa-corporativo-nr12`} class="p-8 border border-slate-200 rounded-xl hover:shadow-xl hover:border-blue-200 hover:bg-blue-50/30 transition-all bg-white group">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-4 group-hover:bg-blue-700 transition-colors">
+            <svg class="w-5 h-5 text-blue-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-700">Gestão Corporativa NR-12</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Padronização técnica e viabilidade financeira para parques fabris.</p>
+        </a>
+        <a href={`${BASE}${lang}/solucoes/gestao-corporativa/assessoria-maquinas-importadas`} class="p-8 border border-slate-200 rounded-xl hover:shadow-xl hover:border-blue-200 hover:bg-blue-50/30 transition-all bg-white group">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-4 group-hover:bg-blue-700 transition-colors">
+            <svg class="w-5 h-5 text-blue-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-700">Máquinas Importadas</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Inspeção pré-embarque e nacionalização de adequações.</p>
+        </a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>

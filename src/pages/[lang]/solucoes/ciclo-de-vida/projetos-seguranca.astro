@@ -1,0 +1,21 @@
+---
+// src/pages/[lang]/solucoes/ciclo-de-vida/projetos-seguranca.astro
+export const prerender = true;
+import ServicePage from '../../../../components/ServicePage.astro';
+import { projetosSegurancaPage } from '../../../../data/pages/projetos-seguranca.pt';
+
+import { LOCALES } from '../../../../i18n/config';
+
+export function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+---
+
+<ServicePage
+  page={projetosSegurancaPage}
+  lang={lang}
+  seoTitle="Projetos de Engenharia de Segurança (PCS e PES) | SSI Automação"
+  seoDescription="Desenvolvimento de Projetos Conceitual (PCS) e Executivo (PES) de Segurança. Diagramas EPLAN, proteções mecânicas 3D e topologia de redes seguras. SSI Automação."
+/>

@@ -1,0 +1,18 @@
+---
+// src/pages/[lang]/solucoes/treinamentos-capacitacao.astro
+export const prerender = true;
+import ServicePage from '../../../components/ServicePage.astro';
+import { getPagePayload } from '../../i18n/payloadLoader';
+
+export function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const currentLang = Astro.currentLocale || 'pt';
+const pagePayload = getPagePayload('treinamentos', currentLang);
+---
+
+<ServicePage
+  page={pagePayload}
+  lang={currentLang}
+/>

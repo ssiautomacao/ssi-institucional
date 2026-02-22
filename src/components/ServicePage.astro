@@ -1,0 +1,183 @@
+---
+// src/components/ServicePage.astro
+// Reutilizável — layout canônico para todas as páginas de serviço.
+// Consome um ServicePagePayload completo via props estritas.
+// Zero hardcoded content: texto, imagens e form vêm do data layer DEV-CORE.
+
+import type { ServicePagePayload } from '../types/content';
+import Layout from '../layouts/Layout.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import HeroVideo from './HeroVideo.astro';
+import EvidenceGallery from './EvidenceGallery.astro';
+import DynamicLeadForm from './DynamicLeadForm.astro';
+
+interface Props {
+  page: ServicePagePayload;
+  lang: string;
+  seoTitle: string;
+  seoDescription?: string;
+}
+
+const { page, lang, seoTitle, seoDescription } = Astro.props;
+
+// Build evidence image arrays for galleries
+const methodologyImages = page.methodology.evidenceImage
+  ? [page.methodology.evidenceImage]
+  : [];
+
+const deliverablesImages = page.deliverables.evidenceImage
+  ? [page.deliverables.evidenceImage]
+  : [];
+---
+
+<Layout title={seoTitle} lang={lang} description={seoDescription}>
+  <Header />
+  <main id={page.id}>
+
+    <!-- HERO -->
+    <HeroVideo {...page.hero} />
+
+    <!-- PAIN POINT -->
+    <section id={page.painPoint.id} class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {Astro.slots.has('risk-animation') ? (
+          /* Two-column layout when animation island is provided (e.g. LAR page) */
+          <div class="grid gap-12 items-center lg:grid-cols-2">
+            <div>
+              <span class="text-blue-700 font-bold tracking-wider uppercase text-xs">Diagnóstico</span>
+              <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mt-3 mb-6 leading-tight">
+                {page.painPoint.title}
+              </h2>
+              <p class="text-lg text-slate-600 leading-relaxed border-l-4 border-blue-500 pl-6">
+                {page.painPoint.body}
+              </p>
+            </div>
+            <slot name="risk-animation" />
+          </div>
+        ) : (
+          /* Default: centered layout (all other service pages) */
+          <div class="max-w-4xl mx-auto text-center">
+            <span class="text-blue-700 font-bold tracking-wider uppercase text-xs">Diagnóstico</span>
+            <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mt-3 mb-6 leading-tight">
+              {page.painPoint.title}
+            </h2>
+            <p class="text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto border-l-4 border-blue-500 pl-6 text-left">
+              {page.painPoint.body}
+            </p>
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- METHODOLOGY -->
+    <section id={page.methodology.id} class="py-20 bg-slate-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class={`grid gap-16 items-start ${methodologyImages.length > 0 ? 'lg:grid-cols-2' : 'lg:grid-cols-1'}`}>
+
+          <!-- Text block -->
+          <div>
+            <span class="text-blue-700 font-bold tracking-wider uppercase text-xs">Metodologia</span>
+            <h2 class="text-3xl font-bold text-slate-900 mt-3 mb-6 leading-tight">
+              {page.methodology.title}
+            </h2>
+            <p class="text-lg text-slate-600 leading-relaxed">
+              {page.methodology.body}
+            </p>
+          </div>
+
+          <!-- Evidence images -->
+          {methodologyImages.length > 0 && (
+            <EvidenceGallery items={methodologyImages} columns={1} />
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- ZEUS HRN LOOP (optional slot — only LAR page provides this) -->
+    {Astro.slots.has('zeus-hrn-loop') && (
+      <section class="py-16 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-8">
+            <span class="text-blue-700 font-bold tracking-wider uppercase text-xs">Software de Análise</span>
+            <h2 class="text-2xl font-bold text-slate-900 mt-2">Interface ZEUS Analytics — HRN em Ação</h2>
+          </div>
+          <slot name="zeus-hrn-loop" />
+        </div>
+      </section>
+    )}
+
+    <!-- TECHNICAL SPECS (optional — only rendered when payload includes it) -->
+    {page.technicalSpecs && (
+      <section id={page.technicalSpecs.id} class="py-16 bg-slate-800">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <span class="text-blue-400 font-bold tracking-wider uppercase text-xs">Instrumentação</span>
+          <h2 class="text-2xl font-bold text-white mt-3 mb-8">{page.technicalSpecs.title}</h2>
+          <div class="divide-y divide-slate-700 rounded-xl border border-slate-700 overflow-hidden">
+            {page.technicalSpecs.rows.map((row) => (
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2 px-5 py-4 bg-slate-900/50 hover:bg-slate-700/40 transition-colors">
+                <span class="sm:w-48 flex-shrink-0 text-xs font-bold text-slate-400 uppercase tracking-wide">{row.label}</span>
+                <span class="text-slate-100 font-medium">
+                  {row.value}{row.unit ? ` ${row.unit}` : ''}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- DELIVERABLES -->
+    <section id={page.deliverables.id} class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class={`grid gap-16 items-start ${deliverablesImages.length > 0 ? 'lg:grid-cols-2' : 'lg:grid-cols-1'}`}>
+
+          <!-- Checklist -->
+          <div>
+            <span class="text-blue-700 font-bold tracking-wider uppercase text-xs">Entregáveis</span>
+            <h2 class="text-3xl font-bold text-slate-900 mt-3 mb-8 leading-tight">
+              {page.deliverables.title}
+            </h2>
+            <ul class="space-y-4">
+              {page.deliverables.items.map((item) => (
+                <li class="flex items-start gap-4 p-4 bg-slate-50 rounded-lg border border-slate-100 hover:border-blue-200 hover:bg-blue-50/40 transition-colors group">
+                  <span class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-700 flex items-center justify-center mt-0.5">
+                    <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </span>
+                  <div class="flex-1">
+                    <span class="font-semibold text-slate-800 group-hover:text-blue-800 transition-colors">{item.title}</span>
+                    {item.codeRef && (
+                      <span
+                        class="text-transparent select-text selection:bg-slate-200 selection:text-slate-800 text-[10px] ml-2"
+                        aria-hidden="true"
+                        title="Código de Rastreabilidade Interna"
+                      >
+                        #{item.codeRef}
+                      </span>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Evidence images -->
+          {deliverablesImages.length > 0 && (
+            <EvidenceGallery items={deliverablesImages} columns={1} />
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- LEAD FORM -->
+    <section id="contact" class="bg-slate-900 py-20">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <DynamicLeadForm {...page.leadForm} />
+      </div>
+    </section>
+
+  </main>
+  <Footer />
+</Layout>

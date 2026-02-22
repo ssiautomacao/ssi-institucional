@@ -1,0 +1,17 @@
+---
+// src/pages/[lang]/solucoes/servicos-tecnicos/vasos-pressao-nr13.astro
+import ServicePage from '../../../../components/ServicePage.astro';
+import { getPagePayload } from '../../../../i18n/payloadLoader';
+
+export function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const currentLang = Astro.currentLocale || 'pt';
+const pagePayload = getPagePayload('vasos-pressao-nr13', currentLang);
+---
+
+<ServicePage
+  page={pagePayload}
+  lang={currentLang}
+/>
