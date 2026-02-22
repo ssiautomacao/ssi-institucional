@@ -1,0 +1,43 @@
+---
+import { Image } from 'astro:assets';
+import factoryWorkers from '../assets/factory-workers.jpg';
+---
+
+<section class="py-16 bg-slate-50 relative overflow-hidden">
+    <!-- Background integrated with overlay for institutional look -->
+    <div class="absolute inset-0 z-0 opacity-10">
+        <Image 
+            src={factoryWorkers} 
+            alt="Equipe na fábrica" 
+            class="w-full h-full object-cover grayscale"
+            quality={80}
+            format="webp" 
+        />
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <h3 class="text-2xl font-bold text-slate-800 mb-8 uppercase tracking-wider">Autoridade Normativa</h3>
+        
+        <div class="flex flex-wrap justify-center gap-8 items-center">
+            <div class="bg-white px-8 py-4 rounded-lg shadow-sm border-b-4 border-[#004A99] hover:-translate-y-1 transition-transform">
+                <span class="block text-3xl font-bold text-[#004A99]">NR-12</span>
+                <span class="text-slate-600 text-sm font-medium">Segurança em Máquinas</span>
+            </div>
+
+            <div class="bg-white px-8 py-4 rounded-lg shadow-sm border-b-4 border-[#004A99] hover:-translate-y-1 transition-transform">
+                <span class="block text-3xl font-bold text-[#004A99]">NR-10</span>
+                <span class="text-slate-600 text-sm font-medium">Instalações Elétricas</span>
+            </div>
+
+            <div class="bg-white px-8 py-4 rounded-lg shadow-sm border-b-4 border-[#004A99] hover:-translate-y-1 transition-transform">
+                <span class="block text-3xl font-bold text-[#004A99]">ISO 13855</span>
+                <span class="text-slate-600 text-sm font-medium">Posicionamento de Proteções</span>
+            </div>
+
+             <div class="bg-white px-8 py-4 rounded-lg shadow-sm border-b-4 border-slate-600 hover:-translate-y-1 transition-transform opacity-75">
+                <span class="block text-3xl font-bold text-slate-700">CREA-SP</span>
+                <span class="text-slate-600 text-sm font-medium">Engenharia Registrada</span>
+            </div>
+        </div>
+    </div>
+</section>

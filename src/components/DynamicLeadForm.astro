@@ -1,0 +1,159 @@
+---
+// src/components/DynamicLeadForm.astro
+// Strict-props component — all fields, labels, and endpoint driven by DynamicLeadFormProps.
+// Sprint 06: Added honeypot anti-bot field (website_trap) + formId/hiddenIntentKey in fetch payload.
+
+import type { DynamicLeadFormProps } from '../types/content';
+
+type Props = DynamicLeadFormProps;
+const { formId, title, fields, submitLabel, endpoint, hiddenIntentKey } = Astro.props;
+---
+
+<div class="w-full">
+  {title && <h2 class="text-3xl font-bold text-white text-center mb-2">{title}</h2>}
+  <p class="text-slate-400 text-center mb-10 text-sm">Retorno em até 1 dia útil pelo canal de sua preferência.</p>
+
+  <form
+    id={formId}
+    data-endpoint={endpoint}
+    data-intent={hiddenIntentKey}
+    data-submit-label={submitLabel}
+    novalidate
+    class="grid grid-cols-1 sm:grid-cols-2 gap-5"
+  >
+    <!-- Dynamic fields -->
+    {fields.map((field) => (
+      <div class={`flex flex-col gap-1.5 ${field.type === 'textarea' || field.type === 'select' ? 'sm:col-span-2' : ''}`}>
+        <label
+          for={`${formId}-${field.name}`}
+          class="text-sm font-semibold text-slate-300 tracking-wide"
+        >
+          {field.label}
+          {field.required && <span class="text-blue-400 ml-0.5" aria-hidden="true">*</span>}
+        </label>
+
+        {field.type === 'select' ? (
+          <select
+            id={`${formId}-${field.name}`}
+            name={field.name}
+            required={field.required}
+            class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+          >
+            <option value="" disabled selected>Selecione...</option>
+            {(field.options ?? []).map((opt) => (
+              <option value={opt}>{opt}</option>
+            ))}
+          </select>
+        ) : field.type === 'textarea' ? (
+          <textarea
+            id={`${formId}-${field.name}`}
+            name={field.name}
+            required={field.required}
+            rows={4}
+            class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors resize-none"
+          ></textarea>
+        ) : (
+          <input
+            id={`${formId}-${field.name}`}
+            type={field.type}
+            name={field.name}
+            required={field.required}
+            autocomplete={field.type === 'email' ? 'email' : field.type === 'tel' ? 'tel' : 'off'}
+            class="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-600 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+          />
+        )}
+      </div>
+    ))}
+
+    <!-- Honeypot Anti-Bot (invisible to humans, attracts bots) -->
+    <div class="hidden" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;">
+      <label for={`${formId}-website_trap`}>Não preencha este campo se você for humano:</label>
+      <input type="text" id={`${formId}-website_trap`} name="website_trap" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <!-- Hidden intent field -->
+    <input type="hidden" name="formId" value={formId} />
+    <input type="hidden" name="hiddenIntentKey" value={hiddenIntentKey} />
+    <input type="hidden" name="locale" value={Astro.currentLocale || 'pt'} />
+
+    <!-- Submit — full width -->
+    <div class="sm:col-span-2">
+      <button
+        type="submit"
+        id={`${formId}-submit`}
+        class="w-full py-4 px-8 bg-blue-700 hover:bg-blue-600 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold text-lg uppercase tracking-wide rounded-lg shadow-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+      >
+        {submitLabel}
+      </button>
+    </div>
+
+    <!-- Status message -->
+    <div id={`${formId}-status`} class="sm:col-span-2 text-center text-sm hidden" role="status" aria-live="polite"></div>
+  </form>
+</div>
+
+<script define:vars={{ currentLang: Astro.currentLocale || 'pt' }}>
+  // Wires up all DynamicLeadForm instances on the page with async fetch submission.
+  // Reads formId + hiddenIntentKey from hidden inputs for the API payload.
+  document.querySelectorAll('form[data-endpoint]').forEach((form) => {
+    const endpoint = form.dataset.endpoint;
+    const originalLabel = form.dataset.submitLabel ?? 'Enviar';
+    const submitBtn = form.querySelector('[type="submit"]');
+    const statusEl = form.querySelector('[role="status"]');
+    const hiddenIntentKey = form.dataset.intent;
+    const formId = form.id;
+
+    const showStatus = (msg, isSuccess) => {
+      statusEl.className = `sm:col-span-2 text-center text-sm ${isSuccess ? 'text-green-400' : 'text-red-400'}`;
+      statusEl.textContent = msg;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+      statusEl.className = 'sm:col-span-2 text-center text-sm hidden';
+
+      // Build payload: all form fields + hidden fields (formId, hiddenIntentKey, honeypot)
+      const payload = Object.fromEntries(new FormData(form));
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          showStatus(`✓ ${data.message ?? 'Solicitação recebida! Entraremos em contato em breve.'}`, true);
+          
+          // NOVO: Disparo de Conversão para Analytics (Phase 7)
+          if (window.dataLayer) {
+            window.dataLayer.push({
+              'event': 'generate_lead',
+              'lead_intent': hiddenIntentKey,
+              'lead_language': currentLang,
+              'form_id': formId
+            });
+          }
+
+          form.reset();
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalLabel;
+        } else {
+          throw new Error(`HTTP ${res.status}`);
+        }
+      } catch {
+        showStatus('✗ Erro ao enviar. Tente pelo WhatsApp: (11) 94454-6380', false);
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }
+    });
+  });
+</script>

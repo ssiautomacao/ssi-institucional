@@ -1,0 +1,20 @@
+---
+// src/pages/[lang]/solucoes/servicos-tecnicos/loto-lockout-tagout.astro
+export const prerender = true;
+import Layout from '../../../../layouts/Layout.astro';
+import ServicePage from '../../../../components/ServicePage.astro';
+import { getPagePayload } from '../../../../i18n/payloadLoader';
+
+import { LOCALES } from '../../../../i18n/config';
+
+export function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const currentLang = Astro.currentLocale || 'pt';
+const pagePayload = getPagePayload('loto', currentLang);
+---
+
+<Layout title={pagePayload.hero.headline} description={pagePayload.hero.subtext} lang={currentLang}>
+  <ServicePage page={pagePayload} lang={currentLang} seoTitle={pagePayload.hero.headline} />
+</Layout>

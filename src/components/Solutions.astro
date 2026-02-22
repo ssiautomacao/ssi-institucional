@@ -1,0 +1,98 @@
+---
+import { CheckCircle, ArrowRight } from 'lucide-react';
+import { Image } from 'astro:assets';
+import menWarehouse from '../assets/men-warehouse-working-laptop.jpg';
+
+const lang = Astro.currentLocale || 'pt';
+const BASE = import.meta.env.BASE_URL;
+---
+
+<section id="solutions" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      
+      <!-- Content -->
+      <div class="fade-in">
+          <h2 class="text-[#004A99] font-bold tracking-wide uppercase text-sm mb-3">Nossos Serviços</h2>
+          <h3 class="text-4xl font-bold text-slate-800 tracking-tight leading-tight mb-6 font-display">
+            Soluções Especializadas em <br/>Segurança do Trabalho
+          </h3>
+          <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+            Atuamos exclusivamente com consultoria técnica de alto nível, fornecendo suporte decisivo para adequação normativa e redução de riscos.
+          </p>
+
+            <!-- Service 1 -->
+            <div class="flex gap-4 group items-start">
+                <div class="flex-shrink-0 mt-1">
+                    <CheckCircle className="w-6 h-6 text-[#004A99]" />
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-[#004A99] transition-colors">Laudos de Apreciação de Risco (NR-12)</h4>
+                    <p class="text-slate-600 mb-2">Mapeamento completo de perigos e riscos conforme NBR ISO 12100, definindo o Category e Performance Level (PLr) necessários.</p>
+                    <a href={`${BASE}${lang}/servicos/apreciacao-de-risco`} class="text-sm font-bold text-[#004A99] hover:underline uppercase tracking-wide">Saiba Mais &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Service 2 -->
+             <div class="flex gap-4 group items-start">
+                <div class="flex-shrink-0 mt-1">
+                    <CheckCircle className="w-6 h-6 text-[#004A99]" />
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-[#004A99] transition-colors">Classificação de Risco (HRN)</h4>
+                    <p class="text-slate-600 mb-2">Metodologia quantitativa para priorização de adequações baseada em severidade, frequência e probabilidade.</p>
+                    <a href={`${BASE}${lang}/servicos/hrn-steel`} class="text-sm font-bold text-[#004A99] hover:underline uppercase tracking-wide">Saiba Mais &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Service 3 -->
+             <div class="flex gap-4 group items-start">
+                <div class="flex-shrink-0 mt-1">
+                    <CheckCircle className="w-6 h-6 text-[#004A99]" />
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-[#004A99] transition-colors">Consultoria em NR-10</h4>
+                    <p class="text-slate-600 mb-2">Diagnóstico de instalações elétricas, testes de continuidade e auditoria de conformidade para sistemas de potência.</p>
+                    <a href={`${BASE}${lang}/servicos/teste-aterramento`} class="text-sm font-bold text-[#004A99] hover:underline uppercase tracking-wide">Saiba Mais &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Service 4 -->
+             <div class="flex gap-4 group items-start">
+                <div class="flex-shrink-0 mt-1">
+                    <CheckCircle className="w-6 h-6 text-[#004A99]" />
+                </div>
+                <div>
+                    <h4 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-[#004A99] transition-colors">Instrumentação (Tempo de Parada)</h4>
+                    <p class="text-slate-600 mb-2">Ensaios com equipamentos calibrados (Maleta HHB) para cálculo preciso das distâncias de segurança.</p>
+                    <a href={`${BASE}${lang}/servicos/maleta-hhb`} class="text-sm font-bold text-[#004A99] hover:underline uppercase tracking-wide">Saiba Mais &rarr;</a>
+                </div>
+            </div>
+          </div>
+
+           <a href="#contact" class="inline-flex items-center mt-10 text-[#004A99] font-bold hover:underline">
+            Solicitar Proposta Técnica <ArrowRight className="w-5 h-5 ml-2" />
+          </a>
+      </div>
+
+      <!-- Image -->
+      <div class="relative fade-in" style="transition-delay: 200ms;">
+        <div class="absolute -inset-4 bg-slate-100 rounded-2xl transform rotate-2"></div>
+         <Image 
+            src={menWarehouse} 
+            alt="Engenheiros analisando dados da fábrica" 
+            class="relative rounded-lg shadow-2xl w-full h-[600px] object-cover"
+            width={600}
+            quality={80}
+            format="webp"
+        />
+        <!-- Stat Card -->
+        <div class="absolute bottom-8 left-8 bg-white p-6 rounded-lg shadow-xl border-l-4 border-[#004A99] max-w-xs">
+            <p class="text-3xl font-bold text-[#004A99] mb-1">+500</p>
+            <p class="text-sm text-slate-600 uppercase tracking-wide font-semibold">Máquinas Adequadas e Laudos Emitidos</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

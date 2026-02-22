@@ -1,0 +1,21 @@
+---
+// src/pages/[lang]/solucoes/gestao-corporativa/programa-corporativo-nr12.astro
+export const prerender = true;
+import ServicePage from '../../../../components/ServicePage.astro';
+import { programaCorporativoPage } from '../../../../data/pages/programa-corporativo-nr12.pt';
+
+import { LOCALES } from '../../../../i18n/config';
+
+export function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+---
+
+<ServicePage
+  page={programaCorporativoPage}
+  lang={lang}
+  seoTitle="Gestão Corporativa do Programa NR-12 — Governança Industrial | SSI Automação"
+  seoDescription="Padronização técnica, Books corporativos e estudos de viabilidade (CAPEX) para gestão centralizada do risco em parques industriais complexos. SSI Automação."
+/>

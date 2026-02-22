@@ -1,34 +1,140 @@
 ---
+import HeadSEO from '../components/HeadSEO.astro';
+import { ViewTransitions } from 'astro:transitions';
 import '../styles/global.css';
 
 interface Props {
 	title: string;
+    lang?: string;
+    description?: string;
 }
 
-const { title } = Astro.props;
+const { title, lang = 'pt', description } = Astro.props;
+
+// SEO Logic
+const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://ssi-automacao.com.br';
+const BASE = import.meta.env.BASE_URL.replace(/\/$/, ''); // ex: /ssi-institucional
+const locales = ['pt', 'en', 'es', 'it', 'de', 'zh-CN'];
+
+// Extract the path without the lang prefix to build alternate links
+// Path example: /ssi-institucional/pt/sobre-nos -> /sobre-nos
+const cleanPath = Astro.url.pathname.replace(new RegExp(`^${BASE}/(pt|en|es|it|de|zh-CN)`), '') || '/';
 ---
 
 <!doctype html>
-<html lang="pt-BR" class="scroll-smooth">
+<html lang={lang} class="scroll-smooth">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="description" content="SSI Engenharia - Especialistas em NR-12 e Laudos Técnicos" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
+        
+        <!-- Analytics Data Layer (GA4/GTM) -->
+        <script define:vars={{ currentLang: lang }}>
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'language_detected',
+                'site_language': currentLang
+            });
+        </script>
+
+        <title>{title} | SSI Engenharia</title>
+        {description && <meta name="description" content={description} />}
+        {!description && <meta name="description" content="Consultoria especializada em segurança de máquinas (NR-12, ISO 12100, ISO 13849). Laudos e validações com rastreabilidade técnica. SSI Automação." />}
+
+        <!-- Canonical -->
+        <link rel="canonical" href={new URL(`${BASE}/pt${cleanPath}`, siteUrl)} />
+        
+        <!-- Alternate Hreflang Tags -->
+        {locales.map(locale => (
+          <link 
+            rel="alternate" 
+            hreflang={locale} 
+            href={new URL(`${BASE}/${locale}${cleanPath}`, siteUrl)} 
+          />
+        ))}
+        
+        <!-- X-Default (pointing to Portuguese) -->
+        <link rel="alternate" hreflang="x-default" href={new URL(`${BASE}/pt${cleanPath}`, siteUrl)} />
+
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-		<title>{title} | SSI Engenharia</title>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <ViewTransitions />
 	</head>
-	<body class="bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-900 selection:text-white">
+	<body class="bg-white text-slate-800 font-sans antialiased selection:bg-blue-900 selection:text-white overflow-x-hidden">
 		<slot />
+
+        <script>
+            // Fade-in animation observer
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target); // Only animate once
+                    }
+                });
+            }, observerOptions);
+
+            document.addEventListener('astro:page-load', () => {
+                const fadeElements = document.querySelectorAll('.fade-in');
+                fadeElements.forEach(el => observer.observe(el));
+            });
+        </script>
 	</body>
 </html>
 
-<style>
-    /* Global font setup */
+<style is:global>
+    /* Global font setup & Variables */
     :root {
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        --font-display: 'Montserrat', system-ui, sans-serif;
+        
+        --color-ssi-blue: #004A99;
+        --color-slate-dark: #1e293b;
+        --color-white: #FFFFFF;
+        
+        --bg-body: #FFFFFF;
+
+        /* German Text Stress Test — Long-word resiliency */
+        hyphens: auto;
+        overflow-wrap: break-word;
+    }
+
+    /* Mandarim Typography: prevents mid-word breaks while keeping Latin standards */
+    html[lang="zh-CN"] {
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+    
+    /* Heading color applies only OUTSIDE hero/dark sections — 
+       Tailwind text-white on hero elements takes precedence via cascade */
+    :is(h1, h2, h3, h4, h5, h6):not(section[class*="bg-slate-9"] *, section[class*="bg-gray-9"] *) {
+        font-family: var(--font-display);
+        color: var(--color-slate-dark);
+    }
+    /* Dark backgrounds — always override to white */
+    section[class*="bg-slate-9"] :is(h1, h2, h3, h4, h5, h6),
+    section[class*="bg-gray-9"] :is(h1, h2, h3, h4, h5, h6) {
+        font-family: var(--font-display);
+        color: #ffffff;
+    }
+    
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        will-change: opacity, transform;
+    }
+
+    .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
     }
 </style>

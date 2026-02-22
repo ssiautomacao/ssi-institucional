@@ -1,43 +1,178 @@
 ---
 import { Menu, X } from 'lucide-react';
+import { Image } from 'astro:assets';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import logoSSI from '../assets/logo.png';
+import { getLangFromUrl, languages as langMap, useTranslations } from '../i18n/ui';
+
+const lang = Astro.currentLocale || 'pt';
+const t = useTranslations(lang as any);
+const BASE = import.meta.env.BASE_URL;
+
+// Detect current slug (page path without locale prefix and base)
+// e.g. /ssi-institucional/pt/solucoes/ciclo-de-vida/... → /solucoes/ciclo-de-vida/...
+const currentLang = getLangFromUrl(Astro.url);
+const afterBase   = Astro.url.pathname.startsWith(BASE) ? Astro.url.pathname.slice(BASE.length) : Astro.url.pathname;
+const currentSlug = afterBase.replace(/^[a-z]{2}(-[A-Z]{2})?\//, '') || ''; // strip lang prefix
+
+// Navigation Logic
+const isHome = Astro.url.pathname === `${BASE}${lang}` || Astro.url.pathname === `${BASE}${lang}/`;
+const getLink = (hash: string) => isHome ? hash : `${BASE}${lang}/${hash}`;
+
+// Language entries for the switcher dropdown
+const langEntries: { code: string; label: string }[] = [
+  { code: 'pt',    label: 'PT' },
+  { code: 'en',    label: 'EN' },
+  { code: 'es',    label: 'ES' },
+  { code: 'it',    label: 'IT' },
+  { code: 'de',    label: 'DE' },
+  { code: 'zh-CN', label: '中文' },
+];
+
+// Service link groups for dropdown
+const serviceGroups = [
+    {
+        group: lang === 'es' ? "Ciclo de Vida — Seguridad" : (lang === 'de' ? "Sicherheitslebenszyklus" : "Ciclo de Vida — Segurança"),
+        links: [
+            { label: lang === 'es' ? "Apreciación de Risco" : "Apreciação de Risco", href: `${BASE}${lang}/solucoes/ciclo-de-vida/apreciacao-de-riscos-lar` },
+            { label: "Validación / LVS", href: `${BASE}${lang}/solucoes/ciclo-de-vida/validacao-seguranca-lvs` },
+            { label: "Projetos / Engineering", href: `${BASE}${lang}/solucoes/ciclo-de-vida/projetos-seguranca` },
+        ]
+    },
+    {
+        group: lang === 'es' ? "Servicios Técnicos" : (lang === 'de' ? "Dienstleistungen" : "Serviços Técnicos"),
+        links: [
+            { label: "NR-12 / NR-10 / NR-13", href: `${BASE}${lang}/solucoes/servicos-tecnicos/medicao-tempo-parada` },
+        ]
+    }
+];
 ---
 
-<header id="main-header" class="fixed top-0 w-full z-50 transition-all duration-300 bg-transparent text-white">
+<header id="main-header" class="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200 transition-all duration-300">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-20">
       <!-- Logo -->
       <div class="flex-shrink-0 flex items-center">
-        <a href="#" class="flex items-center gap-2 hover:opacity-80 transition">
-          <img src="/assets/logo.png" alt="SSI Engenharia" class="h-10 w-auto" />
-          <!-- Fallback text hidden if logo loads, or kept for SEO -->
-          <span class="sr-only">SSI Engenharia</span>
+        <a href={`${BASE}${lang}/`} class="flex items-center gap-2">
+          <Image src={logoSSI} alt="SSI Engenharia" class="h-12 w-auto" quality={90} format="webp" />
         </a>
       </div>
 
       <!-- Desktop Menu -->
-      <nav class="hidden md:flex space-x-8">
-        <a href="#home" class="text-sm font-medium hover:text-blue-300 transition">Home</a>
-        <a href="#nr12" class="text-sm font-medium hover:text-blue-300 transition">NR-12</a>
-        <a href="#laudos" class="text-sm font-medium hover:text-blue-300 transition">Laudos</a>
-        <a href="#contact" class="text-sm font-medium hover:text-blue-300 transition">Contato</a>
+      <nav class="hidden md:flex items-center space-x-6">
+        <a href={getLink('#home')} class="text-sm font-semibold text-slate-600 hover:text-[#004A99] transition tracking-wide uppercase">{t('nav.home')}</a>
+
+        <!-- Services Mega-Dropdown -->
+        <div class="relative group">
+          <button class="flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-[#004A99] uppercase tracking-wide transition" aria-expanded="false" aria-haspopup="true">
+            {t('nav.services')}
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <!-- Dropdown panel: outer wrapper creates pt-3 hover bridge (no gap) -->
+          <div class="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-[800px] pointer-events-none group-hover:pointer-events-auto">
+            <div class="bg-white rounded-xl shadow-2xl ring-1 ring-slate-200 py-4 px-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div class="grid grid-cols-2 gap-2">
+                {serviceGroups.map((grp) => (
+                  <div class="px-3">
+                    <p class="text-xs font-bold text-blue-700 uppercase tracking-wider mb-3 pb-2 border-b border-slate-100">{grp.group}</p>
+                    <ul class="space-y-1">
+                      {grp.links.map((lnk) => (
+                        <li>
+                          <a
+                            href={lnk.href}
+                            class="flex items-start gap-2 px-3 py-2.5 rounded-lg text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-800 transition-colors group/lnk"
+                          >
+                            <span class="mt-0.5 w-1.5 h-1.5 rounded-full bg-blue-500 flex-shrink-0 group-hover/lnk:bg-blue-700 transition-colors"></span>
+                            {lnk.label}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href={`${BASE}${lang}/sobre-nos`} class="text-sm font-semibold text-slate-600 hover:text-[#004A99] transition tracking-wide uppercase">{t('nav.about')}</a>
+
+        <!-- Language Selector — i18n Phase 1 (getRelativeLocaleUrl) -->
+        <div class="relative group">
+            <button
+              class="flex items-center space-x-1 text-sm font-semibold text-slate-600 hover:text-[#004A99] uppercase"
+              aria-label="Selecionar idioma"
+            >
+                <span>{currentLang === 'zh-CN' ? '中文' : currentLang.toUpperCase()}</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div class="absolute right-0 mt-2 w-28 bg-white rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ring-1 ring-black ring-opacity-5">
+                {langEntries.map((l) => (
+                    <a
+                        href={getRelativeLocaleUrl(l.code, currentSlug)}
+                        class={`lang-switch-btn block px-4 py-2 text-sm hover:bg-slate-50 hover:text-[#004A99] transition-colors ${
+                          currentLang === l.code
+                            ? 'font-bold text-[#004A99] bg-slate-50'
+                            : 'text-slate-700'
+                        }`}
+                        hreflang={l.code}
+                        title={langMap[l.code as keyof typeof langMap]}
+                        data-lang={l.code}
+                    >
+                        {l.label}
+                    </a>
+                ))}
+            </div>
+        </div>
+
+        <a href={getLink('#contact')} class="px-6 py-2.5 bg-[#004A99] hover:bg-blue-800 text-white rounded shadow transition-all font-bold text-sm uppercase tracking-wide">
+            {t('cta.specialist')}
+        </a>
       </nav>
 
       <!-- Mobile Menu Button -->
-      <div class="md:hidden">
-        <button id="mobile-menu-btn" class="p-2 rounded-md hover:bg-white/10 transition">
-          <Menu className="w-6 h-6" />
+      <div class="md:hidden flex items-center gap-4">
+        <span class="text-sm font-bold text-slate-500 uppercase">{lang}</span>
+        <button id="mobile-menu-btn" class="p-2 rounded-md text-slate-600 hover:bg-slate-100 transition">
+            <Menu className="w-6 h-6" />
         </button>
       </div>
     </div>
   </div>
 
   <!-- Mobile Menu Panel -->
-  <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur-sm absolute top-20 left-0 w-full border-t border-slate-700">
-    <div class="px-4 pt-2 pb-6 space-y-2">
-      <a href="#home" class="block py-2 text-base font-medium hover:text-blue-300">Home</a>
-      <a href="#nr12" class="block py-2 text-base font-medium hover:text-blue-300">NR-12</a>
-      <a href="#laudos" class="block py-2 text-base font-medium hover:text-blue-300">Laudos</a>
-      <a href="#contact" class="block py-2 text-base font-medium hover:text-blue-300">Contato</a>
+  <div id="mobile-menu" class="hidden md:hidden bg-white w-full border-t border-slate-100 absolute top-20 left-0 shadow-lg max-h-[80vh] overflow-y-auto">
+    <div class="px-6 py-6 space-y-2 text-center">
+      <a href={getLink('#home')} class="block py-2 text-lg font-medium text-slate-800 hover:text-[#004A99]">{t('nav.home')}</a>
+
+      <!-- Mobile: service section -->
+      {serviceGroups.map((grp) => (
+        <div class="pt-3 pb-1">
+          <p class="text-xs font-bold text-blue-700 uppercase tracking-widest mb-2">{grp.group}</p>
+          {grp.links.map((lnk) => (
+            <a href={lnk.href} class="block py-2 text-sm text-slate-700 hover:text-[#004A99]">{lnk.label}</a>
+          ))}
+        </div>
+      ))}
+
+      <a href={`${BASE}${lang}/sobre-nos`} class="block py-2 text-lg font-medium text-slate-800 hover:text-[#004A99]">{t('nav.about')}</a>
+
+      <div class="flex justify-center gap-4 py-4 border-t border-slate-100 mt-2">
+          {langEntries.map((l) => (
+             <a
+               href={getRelativeLocaleUrl(l.code, currentSlug)}
+               class={`lang-switch-btn text-sm font-bold ${currentLang === l.code ? 'text-[#004A99]' : 'text-slate-500'}`}
+               data-lang={l.code}
+             >
+                 {l.label}
+             </a>
+          ))}
+      </div>
+
+      <a href={getLink('#contact')} class="inline-block px-8 py-3 bg-[#004A99] text-white rounded font-bold mt-4 w-full">{t('cta.specialist')}</a>
     </div>
   </div>
 </header>
@@ -46,20 +181,41 @@ import { Menu, X } from 'lucide-react';
   const header = document.getElementById('main-header');
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
+  const menuLinks = mobileMenu?.querySelectorAll('a');
 
-  // Scroll visibility logic
   window.addEventListener('scroll', () => {
     if (window.scrollY > 50) {
       header?.classList.remove('bg-transparent', 'py-4');
-      header?.classList.add('bg-slate-900', 'shadow-lg', 'py-0');
     } else {
-      header?.classList.add('bg-transparent', 'py-4');
-      header?.classList.remove('bg-slate-900', 'shadow-lg', 'py-0');
+      header?.classList.add('bg-transparent');
     }
   });
 
-  // Mobile menu toggle
-  mobileMenuBtn?.addEventListener('click', () => {
-    mobileMenu?.classList.toggle('hidden');
+  const toggleMenu = () => {
+      mobileMenu?.classList.toggle('hidden');
+      document.body.classList.toggle('overflow-hidden');
+  };
+
+  if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', toggleMenu);
+  }
+
+  if (menuLinks) {
+     menuLinks.forEach(link => {
+        link.addEventListener('click', toggleMenu);
+     });
+  }
+
+  // Phase 7: Track manual language switches
+  document.querySelectorAll('.lang-switch-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const targetLang = (e.currentTarget as HTMLElement).getAttribute('data-lang');
+      if ((window as any).dataLayer) {
+        (window as any).dataLayer.push({
+          'event': 'language_switched',
+          'switched_to': targetLang
+        });
+      }
+    });
   });
 </script>

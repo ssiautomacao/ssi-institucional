@@ -1,0 +1,41 @@
+---
+export interface Props {
+  activeLang: string;
+  currentSlug: string;
+}
+
+const { activeLang, currentSlug } = Astro.props;
+
+// Helper to remove leading slash if present
+const cleanSlug = currentSlug.startsWith('/') ? currentSlug.slice(1) : currentSlug;
+
+// Base URL calculation
+// In production, Astro.site is set. In dev, it might be localhost.
+const siteBase = Astro.site ? Astro.site.toString() : 'http://localhost:4321/';
+const base = new URL(import.meta.env.BASE_URL, siteBase).toString().replace(/\/$/, ''); 
+
+// Canonical URL for the current page
+const canonicalURL = new URL(`${base}/${activeLang}/${cleanSlug}`, siteBase).toString();
+
+// Supported languages
+const languages = ['pt', 'en', 'it', 'es', 'de'];
+---
+
+<!-- Canonical -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Alternate Hreflang Tags -->
+{languages.map((lang) => (
+  <link 
+    rel="alternate" 
+    hreflang={lang} 
+    href={new URL(`${base}/${lang}/${cleanSlug}`, siteBase).toString()} 
+  />
+))}
+
+<!-- X-Default (pointing to Portuguese) -->
+<link 
+  rel="alternate" 
+  hreflang="x-default" 
+  href={new URL(`${base}/pt/${cleanSlug}`, siteBase).toString()} 
+/>

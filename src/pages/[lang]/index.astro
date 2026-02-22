@@ -1,0 +1,69 @@
+---
+// src/pages/[lang]/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import HeroVideo from '../../components/HeroVideo.astro';
+import SolutionsGrid from '../../components/SolutionsGrid.astro';
+import DynamicLeadForm from '../../components/DynamicLeadForm.astro';
+import Footer from '../../components/Footer.astro';
+
+// Importa os dados isolados (Dogma da Separação DEV-CORE)
+import { homeHero, homePillars, homeLeadForm } from '../../data/pages/home.pt';
+
+import { LOCALES } from '../../i18n/config';
+
+export function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+---
+
+<Layout title="SSI Automação | Engenharia de Segurança Premium" lang={lang}>
+  <Header />
+  <main>
+
+    <!-- HERO — driven by homeHero payload -->
+    <HeroVideo {...homeHero} />
+
+    <!-- SOCIAL PROOF BAR -->
+    <section class="border-b border-slate-200 bg-slate-50 py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">
+          Certificações e Selos de Qualidade
+        </p>
+        <div class="flex flex-wrap justify-center items-center gap-10 opacity-60 grayscale">
+          <span class="text-slate-500 font-bold text-sm tracking-wide">CMSE® TÜV Nord</span>
+          <span class="text-slate-300 text-2xl" aria-hidden="true">·</span>
+          <span class="text-slate-500 font-bold text-sm tracking-wide">CREA / CONFEA</span>
+          <span class="text-slate-300 text-2xl" aria-hidden="true">·</span>
+          <span class="text-slate-500 font-bold text-sm tracking-wide">ISO 12100</span>
+          <span class="text-slate-300 text-2xl" aria-hidden="true">·</span>
+          <span class="text-slate-500 font-bold text-sm tracking-wide">ISO 13849</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOLUTIONS GRID — driven by homePillars payload -->
+    <section id="solutions" class="py-20 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-14">
+          <span class="text-blue-700 font-bold tracking-wider uppercase text-xs">Nossas Disciplinas</span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-slate-900 mt-3 leading-tight">
+            Engenharia Especializada em<br class="hidden sm:block" /> Segurança de Máquinas
+          </h2>
+        </div>
+        <SolutionsGrid {...homePillars} />
+      </div>
+    </section>
+
+    <!-- LEAD FORM — driven by homeLeadForm payload -->
+    <section id="contact" class="bg-slate-900 py-20">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <DynamicLeadForm {...homeLeadForm} />
+      </div>
+    </section>
+
+  </main>
+  <Footer />
+</Layout>

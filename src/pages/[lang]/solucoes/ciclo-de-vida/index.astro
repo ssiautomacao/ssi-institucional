@@ -1,0 +1,61 @@
+---
+export const prerender = true;
+import Layout from '../../../../layouts/Layout.astro';
+import Header from '../../../../components/Header.astro';
+import Footer from '../../../../components/Footer.astro';
+import { getPagePayload } from '../../../../i18n/payloadLoader';
+
+import { LOCALES } from '../../../../i18n/config';
+
+export function getStaticPaths() {
+  return LOCALES.map(lang => ({ params: { lang } }));
+}
+
+const currentLang = Astro.currentLocale || 'pt';
+const { lang } = Astro.params;
+const pagePayload = getPagePayload('hub-ciclo-vida', currentLang);
+const BASE = import.meta.env.BASE_URL;
+---
+
+<Layout 
+  title={pagePayload.seo.title} 
+  description={pagePayload.seo.description}
+  lang={lang}
+>
+  <Header />
+  <main class="pt-20">
+    <div class="bg-slate-900 py-20 text-center text-white">
+      <div class="max-w-4xl mx-auto px-4">
+        <span class="text-blue-400 font-bold tracking-widest uppercase text-xs">Serviços</span>
+        <h1 class="text-4xl md:text-5xl font-bold mt-4 mb-6">{pagePayload.hero.title}</h1>
+        <p class="text-lg text-slate-300 max-w-2xl mx-auto">{pagePayload.hero.subtitle}</p>
+      </div>
+    </div>
+    <div class="max-w-5xl mx-auto px-4 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <a href={`${BASE}${lang}/solucoes/ciclo-de-vida/apreciacao-de-riscos-lar`} class="p-8 border border-slate-200 rounded-xl hover:shadow-xl hover:border-blue-200 hover:bg-blue-50/30 transition-all bg-white group">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-4 group-hover:bg-blue-700 transition-colors">
+            <svg class="w-5 h-5 text-blue-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-700">Apreciação de Risco (LAR)</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Diagnóstico normativo e mapeamento de perigos (ISO 12100).</p>
+        </a>
+        <a href={`${BASE}${lang}/solucoes/ciclo-de-vida/projetos-seguranca`} class="p-8 border border-slate-200 rounded-xl hover:shadow-xl hover:border-blue-200 hover:bg-blue-50/30 transition-all bg-white group">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-4 group-hover:bg-blue-700 transition-colors">
+            <svg class="w-5 h-5 text-blue-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" /></svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-700">Projetos (PCS e PES)</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Engenharia elétrica, mecânica e topologia de redes seguras.</p>
+        </a>
+        <a href={`${BASE}${lang}/solucoes/ciclo-de-vida/validacao-seguranca-lvs`} class="p-8 border border-slate-200 rounded-xl hover:shadow-xl hover:border-blue-200 hover:bg-blue-50/30 transition-all bg-white group">
+          <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center mb-4 group-hover:bg-blue-700 transition-colors">
+            <svg class="w-5 h-5 text-blue-700 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-700">Validação de Segurança (LVS)</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Cálculo de Performance Level (PLr) e testes funcionais.</p>
+        </a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>

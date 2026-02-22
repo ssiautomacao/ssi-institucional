@@ -1,0 +1,114 @@
+---
+// src/components/HeroVideo.astro
+// Strict-props component — all content driven by HeroProps from DEV-CORE payload.
+// HOTFIX Sprint 03: Full overlay bg-slate-900/65 for guaranteed text contrast.
+// Sprint 06: Uses resolveAsset() — data files no longer need /ssi-institucional/ prefix.
+
+import type { HeroProps } from '../types/content';
+import { resolveAsset } from '../utils/assets';
+
+type Props = HeroProps;
+const { headline, subtext, ctaPrimary, ctaSecondary, videoSrc, imageSrc, imageAlt } = Astro.props;
+const BASE = import.meta.env.BASE_URL;
+
+const resolvedImage = imageSrc ? resolveAsset(imageSrc, BASE) : undefined;
+const resolvedVideo = videoSrc ? resolveAsset(videoSrc, BASE) : undefined;
+---
+
+<section class="relative w-full h-[70vh] min-h-[560px] overflow-hidden bg-slate-900">
+
+  <!-- LAYER 0: Background Media -->
+  {resolvedVideo ? (
+    <>
+      {/* Desktop: video autoplay */}
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        class="absolute inset-0 w-full h-full object-cover z-0 hidden md:block"
+        poster={resolvedImage}
+        aria-hidden="true"
+      >
+        <source src={resolvedVideo} type="video/mp4" />
+      </video>
+      {/* Mobile: static poster image (avoids large video download on 4G) */}
+      {resolvedImage && (
+        <img
+          src={resolvedImage}
+          alt={imageAlt}
+          class="absolute inset-0 w-full h-full object-cover z-0 md:hidden"
+          loading="eager"
+          fetchpriority="high"
+        />
+      )}
+    </>
+  ) : resolvedImage ? (
+    <img
+      src={resolvedImage}
+      alt={imageAlt}
+      class="absolute inset-0 w-full h-full object-cover z-0"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+    />
+  ) : null}
+
+  <!-- LAYER 1: Dark overlay — guaranteed readability on any image (DEV-CORE spec) -->
+  <div class="absolute inset-0 bg-slate-900/65 z-10"></div>
+
+  <!-- LAYER 2: Content -->
+  <div class="relative z-20 container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center h-full pt-20">
+    <div class="max-w-4xl">
+
+      <!-- Trust badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 mb-8 backdrop-blur-sm">
+        <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+        <span class="text-white text-xs font-bold tracking-widest uppercase">ISO 12100 · ISO 13849 · NR-12 · NR-10</span>
+      </div>
+
+      <!-- Headline -->
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white drop-shadow-lg leading-tight mb-6">
+        {headline}
+      </h1>
+
+      <!-- Subtext -->
+      <p class="mt-2 text-xl text-slate-200 drop-shadow max-w-2xl leading-relaxed border-l-4 border-blue-500 pl-6 mb-10">
+        {subtext}
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row gap-4">
+        <a
+          href={ctaPrimary.href}
+          data-track-id={ctaPrimary.trackId}
+          class="px-8 py-4 bg-blue-700 hover:bg-blue-600 text-white rounded shadow-lg transition-all text-center font-bold text-base uppercase tracking-wide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
+        >
+          {ctaPrimary.label}
+        </a>
+
+        {ctaSecondary && (
+          <a
+            href={ctaSecondary.href}
+            data-track-id={ctaSecondary.trackId}
+            target={ctaSecondary.href.startsWith('http') ? '_blank' : undefined}
+            rel={ctaSecondary.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+            class="px-8 py-4 bg-transparent border-2 border-white/70 text-white hover:bg-white hover:text-slate-900 rounded shadow transition-all text-center font-bold text-base uppercase tracking-wide focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          >
+            {ctaSecondary.label}
+          </a>
+        )}
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce opacity-60 z-20">
+    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+    </svg>
+  </div>
+
+</section>

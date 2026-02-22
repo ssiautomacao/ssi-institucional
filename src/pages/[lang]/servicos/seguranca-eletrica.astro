@@ -1,0 +1,60 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+
+export const prerender = true;
+
+export function getStaticPaths() {
+  return [
+    {params: {lang: 'pt'}},
+    {params: {lang: 'en'}},
+    {params: {lang: 'it'}},
+    {params: {lang: 'es'}},
+    {params: {lang: 'de'}},
+  ];
+}
+
+const { lang } = Astro.params;
+const BASE = import.meta.env.BASE_URL;
+---
+
+<Layout title="Segurança Elétrica (NR-10) | SSI Engenharia" lang={lang}>
+    <Header />
+    <main class="pt-24 pb-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+             <div class="mb-8">
+                <a href={`${BASE}${lang}/`} class="inline-flex items-center text-sm font-semibold text-[#004A99] hover:underline">
+                    &larr; Voltar para Home
+                </a>
+            </div>
+
+            <div class="max-w-3xl">
+                <h1 class="text-4xl font-bold text-slate-900 mb-6 font-display">Segurança Elétrica (NR-10)</h1>
+                
+                <div class="prose prose-lg prose-slate text-slate-600">
+                    <p class="mb-6">
+                        Garantimos a segurança em instalações e serviços em eletricidade através de diagnósticos precisos e soluções de engenharia que protegem vidas e patrimônio.
+                    </p>
+                    
+                    <h3 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Nossos Serviços</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 not-prose">
+                        <div class="p-6 bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition">
+                            <h4 class="font-bold text-[#004A99] mb-2">Prontuário das Instalações</h4>
+                            <p class="text-sm text-slate-500">Organização e estruturação completa da documentação exigida pela norma (PIE).</p>
+                        </div>
+                        <div class="p-6 bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition">
+                            <h4 class="font-bold text-[#004A99] mb-2">Laudo Técnico de Inspeção</h4>
+                            <p class="text-sm text-slate-500">Verificação das condições das instalações elétricas com recomendações de adequação.</p>
+                        </div>
+                         <div class="p-6 bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition">
+                            <h4 class="font-bold text-[#004A99] mb-2">Arc Flash Study</h4>
+                            <p class="text-sm text-slate-500">Estudos de energia incidente para definição de EPIs adequados (ATPV).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <Footer />
+</Layout>
